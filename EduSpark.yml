@@ -1,0 +1,354 @@
+app:
+  description: ''
+  icon: 🤖
+  icon_background: '#FFEAD5'
+  mode: advanced-chat
+  name: EduSpark
+  use_icon_as_answer_icon: false
+dependencies:
+- current_identifier: null
+  type: marketplace
+  value:
+    marketplace_plugin_unique_identifier: langgenius/openai:0.2.7@9031bbf9b37d9f6341a20c78a8bd18d686afd3ff627545496c3557705419d084
+    version: null
+- current_identifier: null
+  type: marketplace
+  value:
+    marketplace_plugin_unique_identifier: langgenius/deepseek:0.0.7@c4e7b999ae67bfc059f6f51630bed36def5a835d12b0251694f5784b5ff1cd95
+    version: null
+kind: app
+version: 0.5.0
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      allowed_file_extensions:
+      - .JPG
+      - .JPEG
+      - .PNG
+      - .GIF
+      - .WEBP
+      - .SVG
+      allowed_file_types:
+      - image
+      allowed_file_upload_methods:
+      - remote_url
+      - local_file
+      enabled: true
+      fileUploadConfig:
+        audio_file_size_limit: 50
+        batch_count_limit: 5
+        file_size_limit: 15
+        image_file_size_limit: 10
+        video_file_size_limit: 100
+        workflow_file_upload_limit: 10
+      number_limits: 3
+    opening_statement: ''
+    retriever_resource:
+      enabled: false
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: true
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: true
+    text_to_speech:
+      enabled: true
+      language: zh-Hans
+      voice: ''
+  graph:
+    edges:
+    - data:
+        sourceType: knowledge-retrieval
+        targetType: llm
+      id: 1711528915811-1711528917469
+      selected: false
+      source: '1711528915811'
+      sourceHandle: source
+      target: '1711528917469'
+      targetHandle: target
+      type: custom
+    - data:
+        isInIteration: false
+        sourceType: llm
+        targetType: parameter-extractor
+      id: 1711528917469-source-1719060889083-target
+      selected: false
+      source: '1711528917469'
+      sourceHandle: source
+      target: '1719060889083'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: start
+        targetType: knowledge-retrieval
+      id: 1711528914102-source-1711528915811-target
+      source: '1711528914102'
+      sourceHandle: source
+      target: '1711528915811'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: parameter-extractor
+        targetType: answer
+      id: 1719060889083-source-1711528919501-target
+      source: '1719060889083'
+      sourceHandle: source
+      target: '1711528919501'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        desc: ''
+        selected: false
+        title: 开始
+        type: start
+        variables: []
+      height: 72
+      id: '1711528914102'
+      position:
+        x: 0
+        y: 31
+      positionAbsolute:
+        x: 0
+        y: 31
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+    - data:
+        dataset_ids:
+        - WHb/sf6uVhM7MGqU/RwJvW0Rffrvbbv1AWeYlGCoKCkH7NZ9SXE4wVJcwwpnAmnb
+        desc: 这个功能让你能够从知识库中查找与用户问题有关的文本内容。
+        query_variable_selector:
+        - '1711528914102'
+        - sys.query
+        retrieval_mode: single
+        selected: false
+        single_retrieval_config:
+          model:
+            completion_params:
+              frequency_penalty: 0
+              max_tokens: 512
+              presence_penalty: 0
+              temperature: 0
+              top_p: 1
+            mode: chat
+            name: gpt-3.5-turbo
+            provider: openai
+        title: 知识检索
+        type: knowledge-retrieval
+      dragging: false
+      height: 133
+      id: '1711528915811'
+      position:
+        x: 683
+        y: 0
+      positionAbsolute:
+        x: 683
+        y: 0
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        memory:
+          role_prefix:
+            assistant: ''
+            user: ''
+          window:
+            enabled: false
+            size: 50
+        model:
+          completion_params:
+            frequency_penalty: 0
+            max_tokens: 512
+            temperature: 0.7
+            top_p: 1
+          mode: chat
+          name: deepseek-chat
+          provider: langgenius/deepseek/deepseek
+        prompt_template:
+        - id: 1800ef07-c5b8-4040-b2af-8a9e1d201ca2
+          role: system
+          text: '# 核心身份与使命
+
+            你是**EduSpark**教学平台的核心AI助手。你的角色是一名专业、耐心且富有启发性的教育者，致力于为学生提供清晰、准确和个性化的学习指导。
+
+
+            ## 🧠 核心教学原则
+
+            1.  **语言一致性**：严格遵循用户提问所使用的语言进行回应。
+
+            2.  **专业性与亲和力**：保持专业、得体的书面语，同时不失温和与鼓励，避免使用过于随意的口语词汇（如“咱们”）。
+
+            3.  **引导式教学**：采用苏格拉底式提问法，启发学生思考，而非直接灌输答案。
+
+            4.  **结构化讲解**：将复杂知识分解为易于理解的模块，逻辑清晰地呈现。
+
+
+            ## 💬 对话范例
+
+
+            **范例1：数学问题（中文提问）**
+
+            学生：勾股定理到底是什么？我总是记不住。
+
+            EduSpark：勾股定理是描述直角三角形三边关系的一个重要定理。它的内容是：在一个直角三角形中，两条直角边的平方和等于斜边的平方。
+
+
+            我们可以用一个具体的例子来理解。假设一个直角三角形的两条直角边分别为3和4，那么斜边的长度就是5。因为 3² + 4² = 9 + 16 =
+            25，而25正是5的平方。
+
+
+            现在，请你尝试计算一下：如果一个直角三角形的两条直角边是6和8，那么斜边的长度应该是多少？我们可以一起一步步来算。
+
+
+            **范例2：科学问题（英文提问）**
+
+            学生：What''s the difference between photosynthesis and respiration?
+
+            EduSpark：That''s a great question that gets to the heart of how plants
+            and animals manage energy. Think of it this way: photosynthesis is the
+            process of *storing* energy, while respiration is the process of *releasing*
+            it.
+
+
+            - **Photosynthesis**: Plants use sunlight, water, and carbon dioxide to
+            create oxygen and glucose (sugar), which stores energy.
+
+            - **Respiration**: Both plants and animals take in oxygen to break down
+            that glucose, releasing the stored energy for use.
+
+
+            Could you think of an analogy for this storage and release process in
+            our daily lives?
+
+
+            **范例3：语文问题（中英文混合提问）**
+
+            学生：老师，为什么说鲁迅的《药》有象征意义？What symbols should I look for?
+
+            EduSpark：你提到了一个理解这篇小说的关键。在鲁迅的《药》中，象征手法运用得非常深刻。
+
+
+            “药”本身就是一个核心象征。它表面上指华老栓为儿子治病的“人血馒头”，但深层意义上，它象征着当时社会寻找救国救民道路的“药方”。然而，这剂“药”是无效的，暗示了脱离民众的革命是无法成功的。
+
+
+            另外，“人血馒头”与革命者的鲜血形成强烈对比，象征着民众的愚昧与革命者的牺牲之间的悲剧性隔阂。
+
+
+            你可以仔细品味小说中关于“刑场”和“茶馆”的环境描写，看看能否发现更多的象征元素。这对于理解小说的主题非常有帮助。
+
+
+            ## 📝 教学响应要点
+
+            - **开场回应**：使用“这是一个很好的问题”、“很高兴你问到这一点”等专业而亲切的开场。
+
+            - **逻辑结构**：采用“总-分”结构。先给出清晰的核心概念定义，再分点或举例阐述。
+
+            - **生活化类比**：在解释抽象概念时，使用贴切、易于理解的类比。
+
+            - **互动引导**：在讲解中自然嵌入“请你尝试一下”、“我们可以从哪个角度思考”等引导性提问。
+
+            - **鼓励性结语**：以“理解了这个概念，对于后续学习…会很有帮助”或“你的思考方向很好，我们可以继续深入…”等方式结束，给予学生信心并引导延伸思考。
+
+
+            **请记住**：你代表的是EduSpark专业、可靠的教育品牌。你的每一句回复，都应体现出对知识的严谨和对学生的尊重与关怀。
+
+
+            用户输入为：{{#sys.query#}}'
+        selected: false
+        title: LLM
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 87
+      id: '1711528917469'
+      position:
+        x: 1024
+        y: 23
+      positionAbsolute:
+        x: 1024
+        y: 23
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        answer: '{{#1719060889083.answer#}}'
+        desc: ''
+        selected: false
+        title: 直接回复
+        type: answer
+        variables: []
+      height: 102
+      id: '1711528919501'
+      position:
+        x: 2047
+        y: 16
+      positionAbsolute:
+        x: 2047
+        y: 16
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    - data:
+        desc: ''
+        instruction: ''
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: deepseek-chat
+          provider: langgenius/deepseek/deepseek
+        parameters:
+        - description: Dify的安装
+          name: answer
+          required: true
+          type: string
+        query:
+        - '1711528917469'
+        - text
+        reasoning_mode: prompt
+        selected: false
+        title: 参数提取器
+        type: parameter-extractor
+        variables: []
+        vision:
+          enabled: false
+      height: 87
+      id: '1719060889083'
+      position:
+        x: 1365
+        y: 23
+      positionAbsolute:
+        x: 1365
+        y: 23
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 241
+    viewport:
+      x: 91.91635508205968
+      y: 277.2807074734827
+      zoom: 0.4020444242489627
+  rag_pipeline_variables: []
